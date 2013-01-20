@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Threading;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace NegativeSpace
 {
@@ -13,9 +14,9 @@ namespace NegativeSpace
 		SpriteFont gameFont;
 		
 		Texture2D levelTexture;
-		Texture2D stickmanTexture;
+		List <Character> stickmen;
 		Texture2D deformTexture;
-		Color [] levelColor;
+		Color [] levelData;
 		Color [] deformData;
 		Vector2 deformPosition;
 		MouseState currentMouseState;
@@ -28,21 +29,29 @@ namespace NegativeSpace
 			TransitionOnTime = TimeSpan.FromSeconds(1.5);
 			TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-			levelColor = new Color [800*600];
+			levelData = new Color [800*600];
 			deformData = new Color [100*100];
+
+			stickmen = new List<Character> ();
+			stickmen.Add (new Character (Color.Black));
 			//IsMouseVisible = true;
 		}
 
 		public override void LoadContent ()
 		{
 			if (content == null)
-				content = new ContentManager(ScreenManager.Game.Services, "Content");
+				content = new ContentManager (ScreenManager.Game.Services, "Content");
 
 			gameFont = content.Load <SpriteFont> ("gamefont");
 			// TODO: use this.Content to load your game content here eg.
 			levelTexture = content.Load<Texture2D> ("level");
-			levelTexture.GetData (levelColor);
-			stickmanTexture = content.Load<Texture2D> ("stickman"); 
+			levelTexture.GetData (levelData);
+
+			foreach (var stickman in stickmen) {
+				stickman.LoadContent (content);
+				stickman.Position = new Vector2 (0, 0);
+			}
+
 			deformTexture = content.Load<Texture2D> ("deform");
 			deformTexture.GetData (deformData);
 
@@ -89,9 +98,12 @@ namespace NegativeSpace
 				ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
 			else
 			{
+				foreach (var stickman in stickmen)
+					stickman.HandleInput (input, levelData);
+
 				deformPosition = new Vector2 (mouseState.X - 50, mouseState.Y - 50);
 				
-				if (levelColor [(int) (deformPosition.X + 50 + (deformPosition.Y + 50) * 800)] == Color.White)
+				if (levelData [(int) (deformPosition.X + 50 + (deformPosition.Y + 50) * 800)] == Color.White)
 					deformColor = Color.Black;
 				else
 					deformColor = Color.White;
@@ -114,7 +126,10 @@ namespace NegativeSpace
 			
 			// draw the logo
 			spriteBatch.Draw (levelTexture, new Vector2 (0, 0), Color.White);
-			spriteBatch.Draw (stickmanTexture, new Vector2 (20, 50), Color.Black);
+
+			foreach (var stickman in stickmen)
+				stickman.Draw (spriteBatch);
+
 			spriteBatch.Draw (deformTexture, new Vector2 (deformPosition.X, deformPosition.Y), deformColor);
 
 			spriteBatch.End();
@@ -130,16 +145,16 @@ namespace NegativeSpace
 
 		void deformLevel ()
 		{
-			levelTexture.GetData (levelColor);
+			levelTexture.GetData (levelData);
 			
 			for (int x = 0; x < deformTexture.Width; x++) {
 				for (int y = 0; y < deformTexture.Height; y++) {
 					if (deformData [x + y*100].A != 0)
-						levelColor [(int) (deformPosition.X + x + (deformPosition.Y + y) * 800)] = deformColor;
+						levelData [(int) (deformPosition.X + x + (deformPosition.Y + y) * 800)] = deformColor;
 				}
 			}
 			
-			levelTexture.SetData (levelColor);
+			levelTexture.SetData (levelData);
 		}
 	}
 }

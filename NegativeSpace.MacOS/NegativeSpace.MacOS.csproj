@@ -84,6 +84,7 @@
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Classes\Character.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -100,6 +101,7 @@
     <Folder Include="Content\" />
     <Folder Include="ScreenManager\" />
     <Folder Include="Screens\" />
+    <Folder Include="Classes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\level.png" />
