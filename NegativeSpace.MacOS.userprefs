@@ -1,0 +1,36 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="NegativeSpace.MacOS/Screens/GameplayScreen.cs">
+    <Files>
+      <File FileName="NegativeSpace.MacOS/Screens/GameplayScreen.cs" Line="100" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="MonoGame.Framework.MacOS" expanded="True" />
+          <Node name="NegativeSpace.MacOS" expanded="True">
+            <Node name="Content" expanded="True" />
+            <Node name="Properties" expanded="True" />
+            <Node name="ScreenManager" expanded="True" />
+            <Node name="Screens" expanded="True">
+              <Node name="GameplayScreen.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="ConnectionManagerPad">
+        <State selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
