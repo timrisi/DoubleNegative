@@ -13,17 +13,24 @@ namespace NegativeSpace
 	{
 		enum State {
 			Walking,
+			Jumping,
 			Falling
 		}
 
 		Vector2 gravity = new Vector2 (0, 2);
 		Vector2 ground = new Vector2 (0, -1);
 		Vector2 moveSpeed = new Vector2 (.75f, 0);
+		float startingHeight;
 		State state;
 
 		// The current position of the sprite
 		public Vector2 Position;
 		public Color color;
+		public bool IsActive = false;
+
+		public Color opposite {
+			get { return color == Color.White ? Color.Black : Color.White; }
+		}
 
 		// The texture object used when drawing the sprite
 		Texture2D spriteTexture;
@@ -60,37 +67,62 @@ namespace NegativeSpace
 		{
 			PlayerIndex playerIndex;
 
-			Point leftMiddle = new Point ((int)Position.X, (int) (Position.Y + Size.Height / 2));
-			Point rightMiddle = new Point ((int) (Position.X + Size.Width), (int) (Position.Y + Size.Height / 2));
-			Point leftTop = new Point ((int)Position.X, (int) Position.Y);
-			Point rightTop = new Point ((int) (Position.X + Size.Width), (int) Position.Y);
+			if (state == State.Jumping)
+				updateJump ();
 
-			if (state == State.Walking && 
-			    levelData [leftTop.X + leftTop.Y * 800] != Color.Black &&
-			    input.IsKeyPressed (Keys.A, null, out playerIndex)) {
-				Position -= moveSpeed;
+			//Point leftMiddle = new Point ((int)Position.X, (int) (Position.Y + Size.Height / 2));
+			//Point rightMiddle = new Point ((int) (Position.X + Size.Width), (int) (Position.Y + Size.Height / 2));
+			Point leftTop = new Point ((int)Position.X, (int)Position.Y);
+			Point rightTop = new Point ((int)(Position.X + Size.Width), (int)Position.Y);
+
+			if (IsActive) {
+				if (/*state == State.Walking && */
+				levelData [leftTop.X + leftTop.Y * 800] != color &&
+					input.IsKeyPressed (Keys.A, null, out playerIndex)) {
+					Position -= moveSpeed;
+				}
+				if (Position.X < 0)
+					Position.X = 0;
+
+				if (/*state == State.Walking && */
+				levelData [rightTop.X + rightTop.Y * 800] != color &&
+					input.IsKeyPressed (Keys.D, null, out playerIndex)) {
+					Position += moveSpeed;
+				}
+				if (Position.X + Size.Width > 800)
+					Position.X = 800 - Size.Width;
+
+				if (state == State.Walking &&
+					input.IsNewKeyPress (Keys.Space, null, out playerIndex))
+					jump ();
 			}
-			if (Position.X < 0)
-				Position.X = 0;
 
-			if (state == State.Walking && 
-			    levelData [rightTop.X + rightTop.Y * 800] != Color.Black &&
-			    input.IsKeyPressed (Keys.D, null, out playerIndex)) {
-				Position += moveSpeed;
+			if (state != State.Jumping) {
+				Position += gravity;
+				state = State.Falling;
 			}
-			if (Position.X + Size.Width > 800)
-				Position.X = 800 - Size.Width;
-
-			Position += gravity;
-			state = State.Falling;
 
 			Point bottomMiddle = new Point ((int)(Position.X + Size.Width / 2), (int)(Position.Y + Size.Height - 1));
-			while (levelData [bottomMiddle.X + bottomMiddle.Y * 800] == Color.Black) {
+			while (levelData [bottomMiddle.X + bottomMiddle.Y * 800] == color) {
 				Position += ground;
 				bottomMiddle.Y += (int) ground.Y;
 				state = State.Walking;
 			}
-			
+		}
+
+		void jump ()
+		{
+			state = State.Jumping;
+			startingHeight = Position.Y;
+			Position -= gravity;
+		}
+
+		void updateJump ()
+		{
+			Position -= gravity;
+
+			if (Position.Y < startingHeight - 60)
+				state = State.Falling;
 		}
 	}
 }

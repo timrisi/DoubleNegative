@@ -15,12 +15,22 @@ namespace NegativeSpace
 		
 		Texture2D levelTexture;
 		List <Character> stickmen;
+		int activeIndex;
+		int ActiveIndex {
+			get { return activeIndex; }
+			set {
+				activeIndex = value;
+				if (activeIndex >= stickmen.Count)
+					activeIndex = 0;
+			}
+		}
 		Texture2D deformTexture;
 		Color [] levelData;
 		Color [] deformData;
 		Vector2 deformPosition;
 		MouseState currentMouseState;
 		Color deformColor;
+		Random random = new Random ();
 
 		float pauseAlpha;
 
@@ -33,7 +43,10 @@ namespace NegativeSpace
 			deformData = new Color [100*100];
 
 			stickmen = new List<Character> ();
-			stickmen.Add (new Character (Color.Black));
+			stickmen.Add (new Character (Color.Black) { Position = new Vector2 (0, 0) });
+			stickmen [0].IsActive = true;
+			ActiveIndex = 0;
+			stickmen.Add (new Character (Color.Black) { Position = new Vector2 (100, 0) });
 			//IsMouseVisible = true;
 		}
 
@@ -47,10 +60,8 @@ namespace NegativeSpace
 			levelTexture = content.Load<Texture2D> ("level");
 			levelTexture.GetData (levelData);
 
-			foreach (var stickman in stickmen) {
+			foreach (var stickman in stickmen)
 				stickman.LoadContent (content);
-				stickman.Position = new Vector2 (0, 0);
-			}
 
 			deformTexture = content.Load<Texture2D> ("deform");
 			deformTexture.GetData (deformData);
@@ -98,6 +109,13 @@ namespace NegativeSpace
 				ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
 			else
 			{
+				PlayerIndex index;
+				if (input.IsNewKeyPress (Keys.Tab, null, out index)) {
+					stickmen [ActiveIndex].IsActive = false;
+					ActiveIndex += 1;
+					stickmen [ActiveIndex].IsActive = true;
+				}
+
 				foreach (var stickman in stickmen)
 					stickman.HandleInput (input, levelData);
 
@@ -149,7 +167,7 @@ namespace NegativeSpace
 			
 			for (int x = 0; x < deformTexture.Width; x++) {
 				for (int y = 0; y < deformTexture.Height; y++) {
-					if (deformData [x + y*100].A != 0)
+					if (deformData [x + y*100].A != 0 && deformPosition.X + x <= 800 && deformPosition.Y + y <= 600)
 						levelData [(int) (deformPosition.X + x + (deformPosition.Y + y) * 800)] = deformColor;
 				}
 			}
