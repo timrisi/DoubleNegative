@@ -46,7 +46,7 @@ namespace NegativeSpace
 			stickmen.Add (new Character (Color.Black) { Position = new Vector2 (0, 0) });
 			stickmen [0].IsActive = true;
 			ActiveIndex = 0;
-			stickmen.Add (new Character (Color.Black) { Position = new Vector2 (100, 0) });
+			stickmen.Add (new Character (Color.White) { Position = new Vector2 (100, 400) });
 			//IsMouseVisible = true;
 		}
 
