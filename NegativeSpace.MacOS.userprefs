@@ -2,8 +2,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="NegativeSpace.MacOS/Classes/Character.cs">
     <Files>
-      <File FileName="NegativeSpace.MacOS/Classes/Character.cs" Line="99" Column="4" />
-      <File FileName="NegativeSpace.MacOS/Screens/GameplayScreen.cs" Line="113" Column="5" />
+      <File FileName="NegativeSpace.MacOS/Classes/Character.cs" Line="174" Column="17" />
+      <File FileName="NegativeSpace.MacOS/Screens/GameplayScreen.cs" Line="143" Column="45" />
+      <File FileName="NegativeSpace.MacOS/ScreenManager/InputState.cs" Line="91" Column="27" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

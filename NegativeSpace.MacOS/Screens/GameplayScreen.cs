@@ -14,13 +14,27 @@ namespace NegativeSpace
 		SpriteFont gameFont;
 		
 		Texture2D levelTexture;
-		List <Character> stickmen;
+
+		List <Character> redTeam;
+		List <Character> blueTeam;
+		List <Character> currentTeam {
+			get {
+				return currentTurn == Color.Red ? redTeam : blueTeam;
+			}
+		}
+
+		List <Character> opposingTeam {
+			get {
+				return opponent == Color.Blue ? blueTeam : redTeam;
+			}
+		}
+
 		int activeIndex;
 		int ActiveIndex {
 			get { return activeIndex; }
 			set {
 				activeIndex = value;
-				if (activeIndex >= stickmen.Count)
+				if (activeIndex >= currentTeam.Count)
 					activeIndex = 0;
 			}
 		}
@@ -32,6 +46,13 @@ namespace NegativeSpace
 		Color deformColor;
 		Random random = new Random ();
 
+		Color currentTurn = Color.Red;
+		Color opponent {
+			get {
+				return currentTurn == Color.Red ? Color.Blue : Color.Red;
+			}
+		}
+
 		float pauseAlpha;
 
 		public GameplayScreen ()
@@ -42,12 +63,15 @@ namespace NegativeSpace
 			levelData = new Color [800*600];
 			deformData = new Color [100*100];
 
-			stickmen = new List<Character> ();
-			stickmen.Add (new Character (Color.Black) { Position = new Vector2 (0, 0) });
-			stickmen [0].IsActive = true;
+			redTeam = new List<Character> ();
+			redTeam.Add (new Character (Color.Red, false) { Position = new Vector2 (0, 0) });
+			redTeam [0].IsActive = true;
 			ActiveIndex = 0;
-			stickmen.Add (new Character (Color.White) { Position = new Vector2 (100, 400) });
-			//IsMouseVisible = true;
+			redTeam.Add (new Character (Color.Red, true) { Position = new Vector2 (100, 400) });
+
+			blueTeam = new List<Character> ();
+			blueTeam.Add (new Character (Color.Blue, false) { Position = new Vector2 (540, 0) });
+			blueTeam.Add (new Character (Color.Blue, true) { Position = new Vector2 (500, 400) });
 		}
 
 		public override void LoadContent ()
@@ -60,13 +84,13 @@ namespace NegativeSpace
 			levelTexture = content.Load<Texture2D> ("level");
 			levelTexture.GetData (levelData);
 
-			foreach (var stickman in stickmen)
-				stickman.LoadContent (content);
+			foreach (var red in redTeam)
+				red.LoadContent (content);
+			foreach (var blue in blueTeam)
+				blue.LoadContent (content);
 
 			deformTexture = content.Load<Texture2D> ("deform");
 			deformTexture.GetData (deformData);
-
-			Thread.Sleep (1000);
 
 			ScreenManager.Game.ResetElapsedTime ();
 		}
@@ -111,13 +135,22 @@ namespace NegativeSpace
 			{
 				PlayerIndex index;
 				if (input.IsNewKeyPress (Keys.Tab, null, out index)) {
-					stickmen [ActiveIndex].IsActive = false;
+					currentTeam [ActiveIndex].IsActive = false;
 					ActiveIndex += 1;
-					stickmen [ActiveIndex].IsActive = true;
+					currentTeam [ActiveIndex].IsActive = true;
 				}
 
-				foreach (var stickman in stickmen)
-					stickman.HandleInput (input, levelData);
+				if (input.IsNewKeyPress (Keys.RightShift, null, out index)) {
+					currentTeam [ActiveIndex].IsActive = false;
+					currentTurn = opponent;
+					ActiveIndex = 0;
+					currentTeam [ActiveIndex].IsActive = true;
+				}
+
+				foreach (var red in redTeam)
+					red.HandleInput (input, levelData);
+				foreach (var blue in blueTeam)
+					blue.HandleInput (input, levelData);
 
 				deformPosition = new Vector2 (mouseState.X - 50, mouseState.Y - 50);
 				
@@ -145,8 +178,10 @@ namespace NegativeSpace
 			// draw the logo
 			spriteBatch.Draw (levelTexture, new Vector2 (0, 0), Color.White);
 
-			foreach (var stickman in stickmen)
-				stickman.Draw (spriteBatch);
+			foreach (var red in redTeam)
+				red.Draw (spriteBatch);
+			foreach (var blue in blueTeam)
+				blue.Draw (spriteBatch);
 
 			spriteBatch.Draw (deformTexture, new Vector2 (deformPosition.X, deformPosition.Y), deformColor);
 
@@ -167,7 +202,7 @@ namespace NegativeSpace
 			
 			for (int x = 0; x < deformTexture.Width; x++) {
 				for (int y = 0; y < deformTexture.Height; y++) {
-					if (deformData [x + y*100].A != 0 && deformPosition.X + x <= 800 && deformPosition.Y + y <= 600)
+					if (deformData [x + y*100].A != 0 && deformPosition.X + x < 800 && deformPosition.Y + y < 600)
 						levelData [(int) (deformPosition.X + x + (deformPosition.Y + y) * 800)] = deformColor;
 				}
 			}

@@ -113,5 +113,6 @@
     <Content Include="Content\gradient.xnb" />
     <Content Include="Content\menufont.xnb" />
     <Content Include="Content\SpriteFont1.xnb" />
+    <Content Include="Content\target.png" />
   </ItemGroup>
 </Project>

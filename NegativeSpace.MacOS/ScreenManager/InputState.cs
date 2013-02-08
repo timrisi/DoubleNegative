@@ -76,6 +76,22 @@ namespace NegativeSpace
 			}
 		}
 
+		public bool KeyWasReleased (Keys key, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
+		{
+			if (controllingPlayer.HasValue) {
+				playerIndex = controllingPlayer.Value;
+				int i = (int)playerIndex;
+				
+				return (CurrentKeyboardStates [i].IsKeyUp (key) &&
+				        LastKeyboardStates [i].IsKeyDown (key));
+			} else {
+				return (KeyWasReleased(key, PlayerIndex.One, out playerIndex) ||
+				        KeyWasReleased(key, PlayerIndex.Two, out playerIndex) ||
+				        KeyWasReleased(key, PlayerIndex.Three, out playerIndex) ||
+				        KeyWasReleased(key, PlayerIndex.Four, out playerIndex));
+			}
+		}
+
 		public bool DidLeftMouseClick ()
 		{
 			return (LastMouseState.LeftButton == ButtonState.Pressed &&
