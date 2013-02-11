@@ -1,21 +1,17 @@
-﻿<Properties GitUserInfo="UsingGIT">
+﻿<Properties GitUserInfo="UsingGIT" MonoDevelop.MonoMac.LastXamMacNagTime="2/10/2013 12:32:38 AM">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="NegativeSpace.MacOS/Classes/Character.cs">
     <Files>
-      <File FileName="NegativeSpace.MacOS/Classes/Character.cs" Line="174" Column="17" />
-      <File FileName="NegativeSpace.MacOS/Screens/GameplayScreen.cs" Line="143" Column="45" />
-      <File FileName="NegativeSpace.MacOS/ScreenManager/InputState.cs" Line="91" Column="27" />
+      <File FileName="NegativeSpace.MacOS/Classes/Character.cs" Line="190" Column="33" />
+      <File FileName="NegativeSpace.MacOS/Screens/GameplayScreen.cs" Line="120" Column="42" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="MonoGame.Framework.MacOS" expanded="True" />
           <Node name="NegativeSpace.MacOS" expanded="True">
             <Node name="Classes" expanded="True">
               <Node name="Character.cs" selected="True" />
             </Node>
-            <Node name="Content" expanded="True" />
-            <Node name="Properties" expanded="True" />
             <Node name="ScreenManager" expanded="True" />
             <Node name="Screens" expanded="True" />
           </Node>
