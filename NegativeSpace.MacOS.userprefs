@@ -1,8 +1,8 @@
-﻿<Properties GitUserInfo="UsingGIT" MonoDevelop.MonoMac.LastXamMacNagTime="2/10/2013 12:32:38 AM">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+﻿<Properties GitUserInfo="UsingGIT" MonoDevelop.MonoMac.LastXamMacNagTime="2/12/2013 7:46:25 AM">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="NegativeSpace.MacOS/Classes/Character.cs">
     <Files>
-      <File FileName="NegativeSpace.MacOS/Classes/Character.cs" Line="190" Column="33" />
+      <File FileName="NegativeSpace.MacOS/Classes/Character.cs" Line="263" Column="37" />
       <File FileName="NegativeSpace.MacOS/Screens/GameplayScreen.cs" Line="120" Column="42" />
     </Files>
     <Pads>

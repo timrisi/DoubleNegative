@@ -145,10 +145,10 @@ namespace NegativeSpace
 
 			if (IsActive) {
 				if (state == State.Walking && getColor (leftCorner, levelData) != groundColor &&
-					input.IsKeyPressed (Keys.Left, null, out playerIndex))
+					input.IsKeyPressed (Keys.Left, null, out playerIndex) && leftCorner.X > 0)
 					direction.X = -1;
 				else if (state == State.Walking && getColor (rightCorner, levelData) != groundColor &&
-					input.IsKeyPressed (Keys.Right, null, out playerIndex))
+					input.IsKeyPressed (Keys.Right, null, out playerIndex) && rightCorner.X < 799)
 					direction.X = 1;
 
 				if (state == State.Walking &&
@@ -204,71 +204,32 @@ namespace NegativeSpace
 				state = State.Walking;
 			}
 
-			if (Velocity.Y != 0)
+			if (Velocity.Y != 0 && state != State.Jumping)
 				state = State.Falling;
 
 			while (getColor (belowMiddle, levelData) == groundColor) {
 				Position.Y += ground * (float)gameTime.ElapsedGameTime.TotalSeconds;
 				state = State.Walking;
 			}
-
-			/*if (inverted) {
-				Point topMiddle = new Point ((int)(Position.X + Size.Width / 2), (int)(Position.Y + 1));
-
-				if (levelData [topMiddle.X + topMiddle.Y * 800] == groundColor)
-					Velocity.Y += ground * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-				Velocity.Y += gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-				Position += Velocity;
-				state = State.Falling;
-
-				if (levelData [topMiddle.X + topMiddle.Y * 800] == groundColor) {
-					Velocity.Y = 0;
-					state = State.Walking;
-				}
-
-				while (topMiddle.Y < 0 ||
-				       levelData [topMiddle.X + topMiddle.Y * 800] == groundColor) {
-					Position.Y += ground * (float)gameTime.ElapsedGameTime.TotalSeconds;
-					topMiddle = new Point ((int)(Position.X + Size.Width / 2), (int)(Position.Y + 1));
-					state = State.Walking;
-				}
-			} else {
-				Point bottomMiddle = new Point ((int)(Position.X + Size.Width / 2), (int)(Position.Y + Size.Height - 1));
-
-				if (levelData [bottomMiddle.X + bottomMiddle.Y * 800] == groundColor)
-					Velocity.Y += ground * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-				Velocity.Y += gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-				Position += Velocity;
-
-				if (levelData [bottomMiddle.X + bottomMiddle.Y * 800] == groundColor) {
-					Velocity.Y = 0;
-					state = State.Walking;
-				}
-
-				while (bottomMiddle.Y  >= 600 || 
-				       levelData [bottomMiddle.X + bottomMiddle.Y * 800] == groundColor) {
-					Position.Y += ground * (float)gameTime.ElapsedGameTime.TotalSeconds;
-					bottomMiddle = new Point ((int)(Position.X + Size.Width / 2), (int)(Position.Y + Size.Height - 1));
-					state = State.Walking;
-				}
-			}*/
 		}
 
 		void jump ()
 		{
 			state = State.Jumping;
 
-			Velocity.Y = inverted ? 6f : -6f;
+			Velocity.Y = inverted ? 6f : -6f;  
 		}
 
 		void updateJump (GameTime gameTime, Color[] levelData)
 		{
+
 			if (direction.X != 0)
 				Velocity.X = moveSpeed * 1.5f * (float)gameTime.ElapsedGameTime.TotalSeconds * direction.X;
 			else
 				Velocity.X = moveSpeed * 1.5f * (float)gameTime.ElapsedGameTime.TotalSeconds * lastDirection.X;
+
+			if (leftCorner.X <= 0 || rightCorner.X >= 799)
+				Velocity.X = 0;
 
 			if (levelData [aboveMiddle.X + aboveMiddle.Y * 800] == groundColor) {
 				Velocity.Y = 0;
@@ -277,6 +238,8 @@ namespace NegativeSpace
 
 		Color getColor (Point point, Color[] levelData)
 		{
+			if (point.Y < 0 || point.Y >= 600)
+				return groundColor;
 			return levelData [point.X + point.Y * 800];
 		}
 
